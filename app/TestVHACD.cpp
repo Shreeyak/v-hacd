@@ -26,6 +26,18 @@
 #include <conio.h>
 #endif
 
+
+// Used to get the base name of the output file for naming the convex hulls in obj file
+std::string base_name(std::string const & path)
+{
+  return path.substr(path.find_last_of("/\\") + 1);
+}
+std::string remove_extension(std::string const & filename)
+{
+  int p = filename.find_last_of('.');
+  return p > 0 && p != std::string::npos ? filename.substr(0, p) : filename;
+}
+
 // Evaluates if this is true or false, returns true if it 
 // could be evaluated. Stores the result into 'value'
 bool getTrueFalse(const char *option,bool &value)
@@ -348,6 +360,9 @@ int main(int argc,const char **argv)
 				std::string outputName = outputName_.substr(0, pos+1) + "decomp.obj";
 				printf("Creating output file: %s\n", outputName.c_str());
 
+				std::string outFileName(base_name(outputName));
+				std::string outBaseName(remove_extension(outFileName));
+
 				FILE *fph = fopen(outputName.c_str(), "wb");
 
 				if ( fph )
@@ -359,7 +374,7 @@ int main(int argc,const char **argv)
 					{
 						VHACD::IVHACD::ConvexHull ch;
 						iface->GetConvexHull(i,ch);
-						fprintf(fph, "o convex_%d\n", i);  # Make each convex hull an individual object
+						fprintf(fph, "o %s_%d\n", outBaseName.c_str(), i);  // Make each convex hull an individual object
 						for (uint32_t j=0; j<ch.m_nPoints; j++)
 						{
 							const double *pos = &ch.m_points[j*3];
