@@ -359,6 +359,7 @@ int main(int argc,const char **argv)
 					{
 						VHACD::IVHACD::ConvexHull ch;
 						iface->GetConvexHull(i,ch);
+						fprintf(fph, "o convex_%d\n", i);  # Make each convex hull an individual object
 						for (uint32_t j=0; j<ch.m_nPoints; j++)
 						{
 							const double *pos = &ch.m_points[j*3];
