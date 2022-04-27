@@ -341,10 +341,19 @@ int main(int argc,const char **argv)
 			}
 			if ( !canceled && iface->GetNConvexHulls() )
 			{
-				FILE *fph = fopen("decomp.obj", "wb");
+//				FILE *fph = fopen("decomp.obj", "wb");
+
+				std::string outputName_(inputFile);
+				size_t pos = outputName_.find(".obj");
+				std::string outputName = outputName_.substr(0, pos+1) + "decomp.obj";
+				printf("Creating output file: %s\n", outputName.c_str());
+
+				FILE *fph = fopen(outputName.c_str(), "wb");
+
 				if ( fph )
 				{
-					printf("Saving Convex Decomposition results of %d convex hulls to 'decomp.obj'\n", iface->GetNConvexHulls());
+					printf("Saving Convex Decomposition results of %d convex hulls to %s\n", iface->GetNConvexHulls(),
+					       outputName.c_str());
 					uint32_t baseIndex = 1;
 					for (uint32_t i=0; i<iface->GetNConvexHulls(); i++)
 					{
